@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jksk.orgcreditratingpro.groupscore.dao.GroupScoreDao">
+
+    <resultMap id="BaseResultMap" type="com.jksk.entity.orgcreditrating.GroupScore">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+        <result column="sys_score" property="sysScore" jdbcType="INTEGER"/>
+        <result column="weight_score" property="weightScore" jdbcType="INTEGER"/>
+        <result column="synthetical_score" property="syntheticalScore" jdbcType="INTEGER"/>
+        <result column="group_level" property="groupLevel" jdbcType="VARCHAR"/>
+        <result column="risk_analysis" property="riskAnalysis" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="selectGroupScoreList" resultMap="BaseResultMap" parameterType="com.jksk.entity.orgcreditrating.GroupScoreQ">
+        SELECT
+            id,group_name,sys_score,weight_score,synthetical_score,group_level,risk_analysis,update_time,create_time
+        FROM
+            crd_cr_group_score
+        <where>
+            <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(groupName)">
+                group_name = #{groupName}
+            </if>
+            <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(createTimeStart)">
+                <![CDATA[ AND date_format(create_time, '%Y-%m-%d') >= #{createTimeStart} ]]>
+            </if>
+            <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(createTimeEnd)">
+                <![CDATA[ AND date_format(create_time, '%Y-%m-%d') <= #{createTimeEnd} ]]>
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <!--查询字典值-->
+    <select id="selectGroupScoreWordbookList" resultType="com.jksk.entity.orgcreditrating.GroupScoreWordbook">
+        SELECT 
+            id,code,description,score,parent_id,order_no 
+        FROM crd_cr_group_score_wordbook ORDER BY parent_id,order_no
+    </select>
+
+    <insert id="insertGroupScore" parameterType="com.jksk.entity.orgcreditrating.GroupScore"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+            crd_cr_group_score
+            (group_name,sys_score,update_time,create_time)
+        VALUES
+            (#{groupName}, #{sysScore}, #{updateTime, jdbcType=TIMESTAMP}, #{createTime, jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="insertGroupScoreSource" parameterType="com.jksk.entity.orgcreditrating.GroupScoreSource"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+            crd_cr_group_score_source (
+            group_score_id,group_nature,regist_money,year_establishment,private_qualifications,
+            business_model,course_model,course_prise,teacher_num,student_num,
+            group_year_turnover,patent,win_the_prize,litigation,executee_man,
+            eye_negative,group_change,branch_negative,net_negative,official_website,
+            baidu_negative,credit_rank,negative_history_info,total_in_stock,delay_rate,
+            handle_rate,pass_rate,school_begin,get_job,education_direction,
+            student_major,charge_method,training_cycle,cooperation_model,colleges_num,
+            class_model,student_scope,teaching_way,entrance_standard,promise_work,
+            recruit_transfer,certificate_company,certificate_nature,eligibility_applicants,work_nature,
+            can_control,proxy_level_net,exam_level,is_oneself,refund_standard_net,
+            proxy_level_self,big_bag,refund_standard_self,college_test,onself_test,
+            refund_standard_adult,refund_standard_tv,school_nature,pay_method,train_subject,
+            it_proportion,certificate_proportion,education_proportion)
+        value (
+            #{group_score_id}, #{group_nature}, #{regist_money}, #{year_establishment}, #{private_qualifications},
+            #{business_model}, #{course_model}, #{course_prise}, #{teacher_num}, #{student_num},
+            #{group_year_turnover}, #{patent}, #{win_the_prize}, #{litigation}, #{executee_man},
+            #{eye_negative}, #{group_change}, #{branch_negative}, #{net_negative}, #{official_website},
+            #{baidu_negative}, #{credit_rank}, #{negative_history_info}, #{total_in_stock}, #{delay_rate},
+            #{handle_rate}, #{pass_rate}, #{school_begin}, #{get_job}, #{education_direction},
+            #{student_major}, #{charge_method}, #{training_cycle}, #{cooperation_model}, #{colleges_num},
+            #{class_model}, #{student_scope}, #{teaching_way}, #{entrance_standard}, #{promise_work},
+            #{recruit_transfer}, #{certificate_company}, #{certificate_nature}, #{eligibility_applicants}, #{work_nature},
+            #{can_control}, #{proxy_level_net}, #{exam_level}, #{is_oneself}, #{refund_standard_net},
+            #{proxy_level_self}, #{big_bag}, #{refund_standard_self}, #{college_test}, #{onself_test},
+            #{refund_standard_adult}, #{refund_standard_tv}, #{school_nature}, #{pay_method}, #{train_subject},
+            #{it_proportion}, #{certificate_proportion}, #{education_proportion})
+    </insert>
+
+    <select id="selectGroupScoreById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+            id,group_name,sys_score,weight_score,synthetical_score,group_level,risk_analysis,update_time,create_time
+        FROM
+            crd_cr_group_score
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectGroupScoreSourceById" parameterType="java.lang.Long" resultType="com.jksk.entity.orgcreditrating.GroupScoreSource">
+        SELECT
+            ss.*,sc.group_name
+        FROM
+            crd_cr_group_score_source ss,crd_cr_group_score sc
+        WHERE  ss.group_score_id = sc.id  AND ss.id = #{id}
+    </select>
+
+    <select id="selectGroupScoreSourceByGroupId" parameterType="java.lang.Long" resultType="com.jksk.entity.orgcreditrating.GroupScoreSource">
+        SELECT
+            ss.*,sc.group_name
+        FROM
+            crd_cr_group_score_source ss,crd_cr_group_score sc
+        WHERE ss.group_score_id = sc.id  AND ss.group_score_id = #{groupId}
+    </select>
+
+    <update id="updateGroupScore" parameterType="com.jksk.entity.orgcreditrating.GroupScore">
+        UPDATE
+            crd_cr_group_score
+        SET
+            group_name = #{groupName},
+            sys_score = #{sysScore},
+            weight_score = #{weightScore},
+            synthetical_score = #{syntheticalScore},
+            group_level = #{groupLevel},
+            risk_analysis = #{riskAnalysis},
+            update_time = #{updateTime, jdbcType=TIMESTAMP}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateGroupScoreSource" parameterType="com.jksk.entity.orgcreditrating.GroupScoreSource">
+        UPDATE
+            crd_cr_group_score_source
+        SET
+            group_nature = #{group_nature},regist_money = #{regist_money},year_establishment = #{year_establishment},private_qualifications = #{private_qualifications},
+            business_model = #{business_model},course_model = #{course_model},course_prise = #{course_prise},teacher_num = #{teacher_num},student_num = #{student_num},
+            group_year_turnover = #{group_year_turnover},patent = #{patent},win_the_prize = #{win_the_prize},litigation = #{litigation},executee_man = #{executee_man},
+            eye_negative = #{eye_negative},group_change = #{group_change},branch_negative = #{branch_negative},net_negative = #{net_negative},official_website = #{official_website},
+            baidu_negative = #{baidu_negative},credit_rank = #{credit_rank},negative_history_info = #{negative_history_info},total_in_stock = #{total_in_stock},delay_rate = #{delay_rate},
+            handle_rate = #{handle_rate},pass_rate = #{pass_rate},school_begin = #{school_begin},get_job = #{get_job},education_direction = #{education_direction},
+            student_major = #{student_major},charge_method = #{charge_method},training_cycle = #{training_cycle},cooperation_model = #{cooperation_model},colleges_num = #{colleges_num},
+            class_model = #{class_model},student_scope = #{student_scope},teaching_way = #{teaching_way},entrance_standard = #{entrance_standard},promise_work = #{promise_work},
+            recruit_transfer = #{recruit_transfer},certificate_company = #{certificate_company},certificate_nature = #{certificate_nature},eligibility_applicants = #{eligibility_applicants},work_nature = #{work_nature},
+            can_control = #{can_control},proxy_level_net = #{proxy_level_net},exam_level = #{exam_level},is_oneself = #{is_oneself},refund_standard_net = #{refund_standard_net},
+            proxy_level_self = #{proxy_level_self},big_bag = #{big_bag},refund_standard_self = #{refund_standard_self},college_test = #{college_test},onself_test = #{onself_test},
+            refund_standard_adult = #{refund_standard_adult},refund_standard_tv = #{refund_standard_tv},school_nature = #{school_nature},pay_method = #{pay_method},train_subject = #{train_subject},
+            it_proportion = #{it_proportion},certificate_proportion = #{certificate_proportion},education_proportion = #{education_proportion}
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectGroupScoreByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+            id,group_name,sys_score,weight_score,synthetical_score,group_level,risk_analysis,update_time,create_time
+        FROM
+            crd_cr_group_score
+        WHERE group_name = #{groupName}
+    </select>
+
+</mapper>

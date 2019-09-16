@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>common-util</module>
+        <module>common-entity</module>
+        <module>api-document</module>
+        <module>org-credit-rating-pro</module>
+        <module>org-credit-rating-con</module>
+        <module>api-gateway</module>
+    </modules>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.6.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <!--九课数科微服务-->
+    <groupId>com.jksk</groupId>
+    <artifactId>micro-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>jksk-micro-service</name>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <!--开发者-->
+    <developers>
+        <developer>
+            <name>zhaowg</name>
+            <email>zhaoweigang@zhsoftbank.com</email>
+        </developer>
+    </developers>
+    <!--公共配置-->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
+        <spring-cloud-alibaba-dependencies.version>0.9.0.RELEASE</spring-cloud-alibaba-dependencies.version>
+        <nacos.version>1.0.1</nacos.version>
+        <sentinel-transport-simple-http.version>1.6.2</sentinel-transport-simple-http.version>
+        <txlcn-tc.version>5.0.2.RELEASE</txlcn-tc.version>
+        <commons-lang3.version>3.9</commons-lang3.version>
+        <fastjson.version>1.2.58</fastjson.version>
+        <lombok.version>1.18.8</lombok.version>
+        <mybatis-spring.version>2.0.1</mybatis-spring.version>
+        <springfox-swagger.version>2.9.2</springfox-swagger.version>
+        <shiro-core.version>1.4.1</shiro-core.version>
+        <guava.version>20.0</guava.version>
+        <pagehelper-boot.version>1.2.12</pagehelper-boot.version>
+        <pagehelper.version>5.1.10</pagehelper.version>
+        <jsqlparser.version>2.1</jsqlparser.version>
+        <feign-okhttp.version>10.2.3</feign-okhttp.version>
+        <elasticsearch.version>7.2.0</elasticsearch.version>
+        <elasticsearch-rest-high-level-client.version>7.2.0</elasticsearch-rest-high-level-client.version>
+        <slf4j-api.version>1.7.26</slf4j-api.version>
+        <servlet-api.version>4.0.1</servlet-api.version>
+        <jackson-annotations.version>2.9.9</jackson-annotations.version>
+        <jackson-databind.version>2.9.9</jackson-databind.version>
+    </properties>
+
+    <!--项目依赖-->
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+    </dependencies>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <!--解决guava包冲突问题-->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <!-- 解决pagehelper版本过低问题 -->
+            <dependency>
+                <groupId>com.github.jsqlparser</groupId>
+                <artifactId>jsqlparser</artifactId>
+                <version>${jsqlparser.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: jksk-api-gateway
+  cloud:
+    nacos:
+      config:
+        # nacos配置文件后缀名
+        file-extension: yml
+        # nacos配置中心服务地址
+        server-addr: 10.0.8.252:8848
+        # nacos配置中心namespace
+        namespace: 181e91ab-620f-42ad-aa92-51b97388f79a
+      discovery:
+        #Nacos Server \u5730\u5740
+        server-addr: 10.0.8.252:8848
+        # namespace
+        namespace: 181e91ab-620f-42ad-aa92-51b97388f79a

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jksk.orgcreditratingpro.login.dao.LoginDao">
+
+    <resultMap id="BaseResultMap" type="com.jksk.entity.orgcreditrating.LoginUser">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="login_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="password" property="userPwd" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectUserByUserName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT 
+            u.id,u.login_name,u.password,u.real_name,
+            (SELECT r.description FROM crd_sys_role r,crd_sys_userrole ur
+	            WHERE ur.roleid = r.id AND ur.userid = u.id LIMIT 1
+            ) AS role_name
+        FROM
+            crd_sys_user u WHERE u.login_name = #{userName}
+    </select>
+
+</mapper>
